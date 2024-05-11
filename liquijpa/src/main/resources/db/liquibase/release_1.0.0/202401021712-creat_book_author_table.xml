@@ -1,0 +1,48 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+    <changeSet id="202401021712-creat_book_author_table" author="Shemyakin Oleg">
+        <preConditions onFail="WARN">
+            <not>
+                <tableExists tableName="book_author" schemaName="book_store"/>
+            </not>
+        </preConditions>
+        <comment>
+            Создание таблицы издателей
+        </comment>
+        <sql splitStatements="false">
+            CREATE TABLE book_store.book_author
+            (
+                id bigserial,
+                book_id uuid NOT NULL,
+                author_id uuid NOT NULL,
+                PRIMARY KEY (id),
+                FOREIGN KEY (book_id)
+                    REFERENCES book_store.book (id) MATCH SIMPLE
+                    ON UPDATE NO ACTION
+                    ON DELETE NO ACTION
+                    NOT VALID,
+                FOREIGN KEY (author_id)
+                    REFERENCES book_store.author (id) MATCH SIMPLE
+                    ON UPDATE NO ACTION
+                    ON DELETE NO ACTION
+                    NOT VALID
+            );
+
+            ALTER TABLE IF EXISTS book_store.book_author
+                OWNER to postgres;
+
+            COMMENT ON COLUMN book_store.book_author.id
+                IS 'Идентификатор';
+
+            COMMENT ON COLUMN book_store.book_author.book_id
+                IS 'Идентификатор книги';
+
+            COMMENT ON COLUMN book_store.book_author.author_id
+                IS 'Идентификатор автора';
+        </sql>
+        <rollback>
+            DROP TABLE IF EXISTS book_store.book_author;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

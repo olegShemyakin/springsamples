@@ -1,0 +1,34 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+    <changeSet id="202401021632-create_publisher_table" author="Shemyakin Oleg">
+        <preConditions onFail="WARN">
+            <not>
+                <tableExists tableName="publisher" schemaName="book_store"/>
+            </not>
+        </preConditions>
+        <comment>
+            Создание таблицы издателей
+        </comment>
+        <sql splitStatements="false">
+            CREATE TABLE book_store.publisher
+            (
+                id uuid NOT NULL,
+                name character varying(255) NOT NULL,
+                PRIMARY KEY (id)
+            );
+
+            ALTER TABLE IF EXISTS book_store.publisher
+                OWNER to postgres;
+
+            COMMENT ON COLUMN book_store.publisher.id
+                IS 'Идентификатор';
+
+            COMMENT ON COLUMN book_store.publisher.name
+                IS 'Название издательства';
+        </sql>
+        <rollback>
+            DROP TABLE IF EXISTS book_store.publisher;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

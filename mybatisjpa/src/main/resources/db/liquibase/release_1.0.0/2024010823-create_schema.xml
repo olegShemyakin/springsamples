@@ -1,0 +1,20 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+    <changeSet id="2024010823-create_schema" author="Shemyakin Oleg">
+        <preConditions onFail="WARN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(schema_name) FROM information_schema.schemata WHERE schema_name = 'book_store'
+            </sqlCheck>
+        </preConditions>
+        <comment>
+            Создание схемы в БД
+        </comment>
+        <sql splitStatements="false">
+            CREATE SCHEMA book_store AUTHORIZATION postgres;
+        </sql>
+        <rollback>
+            DROP SCHEMA IF EXISTS book_store CASCADE;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

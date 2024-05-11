@@ -1,0 +1,47 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+    <changeSet id="202401021636-create_book_table" author="Shemyakin Oleg">
+        <preConditions onFail="WARN">
+            <not>
+                <tableExists tableName="book" schemaName="book_store"/>
+            </not>
+        </preConditions>
+        <comment>
+            Создание таблицы издателей
+        </comment>
+        <sql splitStatements="false">
+            CREATE TABLE book_store.book
+            (
+                id uuid NOT NULL,
+                name character varying(255) NOT NULL,
+                year smallint NOT NULL,
+                publisher_id uuid NOT NULL,
+                PRIMARY KEY (id),
+                FOREIGN KEY (publisher_id)
+                    REFERENCES book_store.publisher (id) MATCH SIMPLE
+                    ON UPDATE NO ACTION
+                    ON DELETE NO ACTION
+                    NOT VALID
+            );
+
+            ALTER TABLE IF EXISTS book_store.book
+                OWNER to postgres;
+
+            COMMENT ON COLUMN book_store.book.id
+                IS 'Идентификатор';
+
+            COMMENT ON COLUMN book_store.book.name
+                IS 'Название книги';
+
+            COMMENT ON COLUMN book_store.book.year
+                IS 'Год издания';
+
+            COMMENT ON COLUMN book_store.book.publisher_id
+                IS 'Идентифактор издателя';
+        </sql>
+        <rollback>
+            DROP TABLE IF EXISTS book_store.book;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

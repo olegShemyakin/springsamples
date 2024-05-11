@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+        'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<!--suppress ALL -->
+<mapper namespace="org.akira.mybatisjpa.repositories.mybatis.BookRepositoryBatis">
+
+    <select id="findAll" resultMap="BookMap">
+        SELECT id, name, year
+        FROM book;
+    </select>
+
+    <resultMap id="BookMap" type="Book" autoMapping="true"/>
+</mapper>
